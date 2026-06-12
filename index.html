@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TechStore — Sistema de Ventas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css"/>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen" class="auth-screen">
+  <div class="auth-card">
+    <div class="auth-brand">
+      <span class="brand-icon">⬡</span>
+      <span class="brand-name">TechStore</span>
+    </div>
+    <h2 class="auth-title">Iniciar sesión</h2>
+    <div id="loginError" class="alert alert-error hidden"></div>
+    <div class="form-group">
+      <label>Correo electrónico</label>
+      <input type="email" id="loginEmail" placeholder="usuario@techstore.com"/>
+    </div>
+    <div class="form-group">
+      <label>Contraseña</label>
+      <input type="password" id="loginPassword" placeholder="••••••••"/>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="login()">Entrar</button>
+    <p class="auth-switch">¿No tienes cuenta? <a href="#" onclick="showScreen('registerScreen')">Regístrate</a></p>
+  </div>
+</div>
+
+<!-- REGISTER SCREEN -->
+<div id="registerScreen" class="auth-screen hidden">
+  <div class="auth-card">
+    <div class="auth-brand">
+      <span class="brand-icon">⬡</span>
+      <span class="brand-name">TechStore</span>
+    </div>
+    <h2 class="auth-title">Crear cuenta</h2>
+    <div id="registerError" class="alert alert-error hidden"></div>
+    <div class="form-group">
+      <label>Nombre completo</label>
+      <input type="text" id="regNombre" placeholder="Juan Pérez"/>
+    </div>
+    <div class="form-group">
+      <label>Correo electrónico</label>
+      <input type="email" id="regEmail" placeholder="usuario@techstore.com"/>
+    </div>
+    <div class="form-group">
+      <label>Contraseña</label>
+      <input type="password" id="regPassword" placeholder="••••••••"/>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="register()">Crear cuenta</button>
+    <p class="auth-switch">¿Ya tienes cuenta? <a href="#" onclick="showScreen('loginScreen')">Inicia sesión</a></p>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="appScreen" class="hidden">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <span class="brand-icon">⬡</span>
+      <span class="brand-name">TechStore</span>
+    </div>
+    <nav class="sidebar-nav">
+      <button class="nav-item active" onclick="showModule('dashboard')">
+        <span class="nav-icon">◈</span> Dashboard
+      </button>
+      <button class="nav-item" onclick="showModule('productos')">
+        <span class="nav-icon">◧</span> Productos
+      </button>
+      <button class="nav-item" onclick="showModule('clientes')">
+        <span class="nav-icon">◉</span> Clientes
+      </button>
+      <button class="nav-item" onclick="showModule('ventas')">
+        <span class="nav-icon">◈</span> Ventas
+      </button>
+      <button class="nav-item" onclick="showModule('reportes')">
+        <span class="nav-icon">◫</span> Reportes
+      </button>
+    </nav>
+    <div class="sidebar-footer">
+      <span id="userNameDisplay" class="user-label"></span>
+      <button class="btn-logout" onclick="logout()">Salir</button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+
+    <!-- DASHBOARD -->
+    <section id="mod-dashboard" class="module active">
+      <div class="page-header">
+        <h1>Dashboard</h1>
+        <span class="page-date" id="currentDate"></span>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Ventas hoy</div>
+          <div class="stat-value" id="statVentasHoy">—</div>
+          <div class="stat-sub">registradas</div>
+        </div>
+        <div class="stat-card accent">
+          <div class="stat-label">Total vendido</div>
+          <div class="stat-value" id="statTotal">—</div>
+          <div class="stat-sub">acumulado</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Productos</div>
+          <div class="stat-value" id="statProductos">—</div>
+          <div class="stat-sub">en catálogo</div>
+        </div>
+        <div class="stat-card warn">
+          <div class="stat-label">Stock bajo</div>
+          <div class="stat-value" id="statStockBajo">—</div>
+          <div class="stat-sub">artículos &lt; 5 unidades</div>
+        </div>
+      </div>
+      <div class="dashboard-row">
+        <div class="card">
+          <h3 class="card-title">Últimas ventas</h3>
+          <table class="data-table" id="dashVentas">
+            <thead><tr><th>Fecha</th><th>Cliente</th><th>Total</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="card">
+          <h3 class="card-title">Productos con stock bajo</h3>
+          <table class="data-table" id="dashStock">
+            <thead><tr><th>Producto</th><th>Stock</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRODUCTOS -->
+    <section id="mod-productos" class="module hidden">
+      <div class="page-header">
+        <h1>Productos</h1>
+        <button class="btn btn-primary" onclick="openModal('modalProducto')">+ Agregar producto</button>
+      </div>
+      <div class="card">
+        <div class="table-toolbar">
+          <input type="text" id="searchProducto" placeholder="Buscar producto..." oninput="filtrarProductos()"/>
+        </div>
+        <table class="data-table" id="tablaProductos">
+          <thead>
+            <tr><th>Nombre</th><th>Categoría</th><th>Precio</th><th>Stock</th><th>Acciones</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- CLIENTES -->
+    <section id="mod-clientes" class="module hidden">
+      <div class="page-header">
+        <h1>Clientes</h1>
+        <button class="btn btn-primary" onclick="openModal('modalCliente')">+ Registrar cliente</button>
+      </div>
+      <div class="card">
+        <div class="table-toolbar">
+          <input type="text" id="searchCliente" placeholder="Buscar cliente..." oninput="filtrarClientes()"/>
+        </div>
+        <table class="data-table" id="tablaClientes">
+          <thead>
+            <tr><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Acciones</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- VENTAS -->
+    <section id="mod-ventas" class="module hidden">
+      <div class="page-header">
+        <h1>Nueva venta</h1>
+      </div>
+      <div class="venta-layout">
+        <div class="card venta-form">
+          <div class="form-group">
+            <label>Cliente</label>
+            <select id="ventaCliente">
+              <option value="">Seleccionar cliente...</option>
+            </select>
+          </div>
+          <h3 class="card-title">Agregar productos</h3>
+          <div class="producto-selector">
+            <select id="ventaProductoSelect">
+              <option value="">Seleccionar producto...</option>
+            </select>
+            <input type="number" id="ventaCantidad" placeholder="Cant." min="1" value="1" style="width:80px"/>
+            <button class="btn btn-secondary" onclick="agregarItemVenta()">Agregar</button>
+          </div>
+          <table class="data-table" id="tablaCarrito">
+            <thead><tr><th>Producto</th><th>Precio</th><th>Cant.</th><th>Subtotal</th><th></th></tr></thead>
+            <tbody></tbody>
+          </table>
+          <div class="venta-total">
+            <span>Total:</span>
+            <span class="total-valor" id="ventaTotal">$0.00</span>
+          </div>
+          <button class="btn btn-primary btn-full" onclick="registrarVenta()">Registrar venta</button>
+        </div>
+        <div class="card venta-historial">
+          <h3 class="card-title">Historial de ventas</h3>
+          <table class="data-table" id="tablaVentas">
+            <thead><tr><th>Fecha</th><th>Cliente</th><th>Total</th><th>Ticket</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- REPORTES -->
+    <section id="mod-reportes" class="module hidden">
+      <div class="page-header">
+        <h1>Reportes</h1>
+      </div>
+      <div class="reportes-grid">
+        <div class="card">
+          <h3 class="card-title">Ventas por fecha</h3>
+          <div class="form-row">
+            <input type="date" id="fechaInicio"/>
+            <input type="date" id="fechaFin"/>
+            <button class="btn btn-secondary" onclick="reporteVentasFecha()">Consultar</button>
+          </div>
+          <table class="data-table" id="tablaReporteVentas">
+            <thead><tr><th>Fecha</th><th>Cliente</th><th>Total</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="card">
+          <h3 class="card-title">Productos más vendidos</h3>
+          <button class="btn btn-secondary" onclick="reporteProductosMasVendidos()">Generar reporte</button>
+          <table class="data-table" id="tablaReporteProductos" style="margin-top:1rem">
+            <thead><tr><th>Producto</th><th>Cantidad vendida</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="card">
+          <h3 class="card-title">Inventario disponible</h3>
+          <button class="btn btn-secondary" onclick="reporteInventario()">Ver inventario</button>
+          <table class="data-table" id="tablaInventario" style="margin-top:1rem">
+            <thead><tr><th>Producto</th><th>Stock</th><th>Estado</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="card">
+          <h3 class="card-title">Ventas mayores a $10,000</h3>
+          <button class="btn btn-secondary" onclick="reporteVentasAltas()">Ver ventas altas</button>
+          <table class="data-table" id="tablaVentasAltas" style="margin-top:1rem">
+            <thead><tr><th>Fecha</th><th>Cliente</th><th>Total</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- MODAL: PRODUCTO -->
+<div id="modalProducto" class="modal-overlay hidden">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modalProductoTitle">Agregar producto</h2>
+      <button class="modal-close" onclick="closeModal('modalProducto')">✕</button>
+    </div>
+    <input type="hidden" id="productoId"/>
+    <div class="form-group">
+      <label>Nombre</label>
+      <input type="text" id="productoNombre" placeholder="iPhone 15 Pro"/>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Categoría</label>
+        <input type="text" id="productoCategoria" placeholder="Smartphones"/>
+      </div>
+      <div class="form-group">
+        <label>Precio ($)</label>
+        <input type="number" id="productoPrecio" placeholder="0.00" step="0.01"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Stock</label>
+      <input type="number" id="productoStock" placeholder="0"/>
+    </div>
+    <div class="form-group">
+      <label>Descripción</label>
+      <textarea id="productoDescripcion" placeholder="Descripción del producto..." rows="3"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modalProducto')">Cancelar</button>
+      <button class="btn btn-primary" onclick="guardarProducto()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: CLIENTE -->
+<div id="modalCliente" class="modal-overlay hidden">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modalClienteTitle">Registrar cliente</h2>
+      <button class="modal-close" onclick="closeModal('modalCliente')">✕</button>
+    </div>
+    <input type="hidden" id="clienteId"/>
+    <div class="form-group">
+      <label>Nombre completo</label>
+      <input type="text" id="clienteNombre" placeholder="María García"/>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="clienteEmail" placeholder="maria@email.com"/>
+      </div>
+      <div class="form-group">
+        <label>Teléfono</label>
+        <input type="tel" id="clienteTelefono" placeholder="667-000-0000"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Dirección</label>
+      <input type="text" id="clienteDireccion" placeholder="Calle, Colonia, Ciudad"/>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modalCliente')">Cancelar</button>
+      <button class="btn btn-primary" onclick="guardarCliente()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: TICKET -->
+<div id="modalTicket" class="modal-overlay hidden">
+  <div class="modal modal-ticket">
+    <div class="modal-header">
+      <h2>Ticket de venta</h2>
+      <button class="modal-close" onclick="closeModal('modalTicket')">✕</button>
+    </div>
+    <div id="ticketContent" class="ticket"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modalTicket')">Cerrar</button>
+      <button class="btn btn-primary" onclick="imprimirTicket()">Imprimir</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast hidden"></div>
+
+<script src="js/api.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
