@@ -3,7 +3,7 @@
 //  Cambia BASE_URL por la URL de tu backend en Render
 // ============================================================
 
-const BASE_URL = 'http://localhost:3000'; // Cambia esto por tu URL de Render
+const BASE_URL = 'https://techstore-backend-yzjj.onrender.com'; 
 
 // Helper general para requests
 async function request(method, endpoint, body = null) {
