@@ -10,7 +10,6 @@
 </head>
 <body>
 
-<!-- LOGIN SCREEN -->
 <div id="loginScreen" class="auth-screen">
   <div class="auth-card">
     <div class="auth-brand">
@@ -32,7 +31,6 @@
   </div>
 </div>
 
-<!-- REGISTER SCREEN -->
 <div id="registerScreen" class="auth-screen hidden">
   <div class="auth-card">
     <div class="auth-brand">
@@ -58,10 +56,7 @@
   </div>
 </div>
 
-<!-- MAIN APP -->
 <div id="appScreen" class="hidden">
-
-  <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sidebar-brand">
       <span class="brand-icon">⬡</span>
@@ -90,10 +85,8 @@
     </div>
   </aside>
 
-  <!-- MAIN CONTENT -->
   <main class="main-content">
 
-    <!-- DASHBOARD -->
     <section id="mod-dashboard" class="module active">
       <div class="page-header">
         <h1>Dashboard</h1>
@@ -118,7 +111,7 @@
         <div class="stat-card warn">
           <div class="stat-label">Stock bajo</div>
           <div class="stat-value" id="statStockBajo">—</div>
-          <div class="stat-sub">artículos &lt; 5 unidades</div>
+          <div class="stat-sub">artículos menos de 5 unidades</div>
         </div>
       </div>
       <div class="dashboard-row">
@@ -139,11 +132,10 @@
       </div>
     </section>
 
-    <!-- PRODUCTOS -->
     <section id="mod-productos" class="module hidden">
       <div class="page-header">
         <h1>Productos</h1>
-        <button class="btn btn-primary" onclick="openModal('modalProducto')">+ Agregar producto</button>
+        <button class="btn btn-primary" onclick="openModalProducto()">+ Agregar producto</button>
       </div>
       <div class="card">
         <div class="table-toolbar">
@@ -158,11 +150,10 @@
       </div>
     </section>
 
-    <!-- CLIENTES -->
     <section id="mod-clientes" class="module hidden">
       <div class="page-header">
         <h1>Clientes</h1>
-        <button class="btn btn-primary" onclick="openModal('modalCliente')">+ Registrar cliente</button>
+        <button class="btn btn-primary" onclick="openModalCliente()">+ Registrar cliente</button>
       </div>
       <div class="card">
         <div class="table-toolbar">
@@ -177,7 +168,6 @@
       </div>
     </section>
 
-    <!-- VENTAS -->
     <section id="mod-ventas" class="module hidden">
       <div class="page-header">
         <h1>Nueva venta</h1>
@@ -218,7 +208,6 @@
       </div>
     </section>
 
-    <!-- REPORTES -->
     <section id="mod-reportes" class="module hidden">
       <div class="page-header">
         <h1>Reportes</h1>
@@ -266,7 +255,6 @@
   </main>
 </div>
 
-<!-- MODAL: PRODUCTO -->
 <div id="modalProducto" class="modal-overlay hidden">
   <div class="modal">
     <div class="modal-header">
@@ -303,7 +291,6 @@
   </div>
 </div>
 
-<!-- MODAL: CLIENTE -->
 <div id="modalCliente" class="modal-overlay hidden">
   <div class="modal">
     <div class="modal-header">
@@ -336,7 +323,6 @@
   </div>
 </div>
 
-<!-- MODAL: TICKET -->
 <div id="modalTicket" class="modal-overlay hidden">
   <div class="modal modal-ticket">
     <div class="modal-header">
@@ -351,7 +337,6 @@
   </div>
 </div>
 
-<!-- TOAST -->
 <div id="toast" class="toast hidden"></div>
 
 <script src="js/api.js"></script>
