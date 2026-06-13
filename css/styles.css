@@ -175,8 +175,8 @@ body {
   min-height: 100vh;
 }
 
-.module { display: none; }
-.module.active { display: block; }
+.module { display: none !important; }
+.module.active { display: block !important; }
 
 .page-header {
   display: flex;
